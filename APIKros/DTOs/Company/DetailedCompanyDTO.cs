@@ -2,18 +2,18 @@ using APIKros.Models;
 
 namespace APIKros.DTOs;
 
-public class StructuredCompanyDTO : IDto<Company, StructuredCompanyDTO>
+public class DetailedCompanyDTO : IDto<Company, DetailedCompanyDTO>
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
     public string Code { get; set; } = "";
     public EmployeeDTO? Director { get; set; }
-    public List<StructuredDivisionDTO> Divisions { get; set; } = new();
+    public List<DivisionDTO> Divisions { get; set; } = new();
     public List<EmployeeDTO> Employees { get; set; } = new();
 
-    public static StructuredCompanyDTO CreateInstance(Company company)
+    public static DetailedCompanyDTO CreateInstance(Company company)
     {
-        return new StructuredCompanyDTO
+        return new DetailedCompanyDTO
         {
             Id = company.Id,
             Name = company.Name,
@@ -22,7 +22,7 @@ public class StructuredCompanyDTO : IDto<Company, StructuredCompanyDTO>
                 ? null
                 : EmployeeDTO.CreateInstance(company.Director),
             Divisions = company.Divisions
-                .Select(StructuredDivisionDTO.CreateInstance)
+                .Select(DivisionDTO.CreateInstance)
                 .ToList(),
             Employees = company.Employees
                 .Select(EmployeeDTO.CreateInstance)
@@ -30,3 +30,4 @@ public class StructuredCompanyDTO : IDto<Company, StructuredCompanyDTO>
         };
     }
 }
+

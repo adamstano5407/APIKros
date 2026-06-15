@@ -5,7 +5,10 @@ namespace APIKros.DTOs;
 public class EmployeeDTO : IDto<Employee, EmployeeDTO>
 {
     public int Id { get; set; }
-    public string FullName { get; set; } = "";
+
+    public string Titile { get; set; } = "";
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
     public string Email { get; set; } = "";
     public string Phone { get; set; } = "";
     public int CompanyId { get; set; }
@@ -15,7 +18,9 @@ public class EmployeeDTO : IDto<Employee, EmployeeDTO>
         return new EmployeeDTO
         {
             Id = employee.Id,
-            FullName = $"{employee.Title} {employee.FirstName} {employee.LastName}",
+            Title = employee.Title,
+            FirstName = employee.FirstName,
+            LastName = employee.LastName,
             Email = employee.Email,
             Phone = employee.Phone,
             CompanyId = employee.CompanyId
