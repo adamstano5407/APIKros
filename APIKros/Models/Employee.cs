@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIKros.Models
 {
+
+
     public class Employee
     {
         [Key]

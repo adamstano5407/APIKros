@@ -2,6 +2,7 @@
 using APIKros.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using APIKros.Models;
 
 namespace APIKros.Controllers
 {
@@ -36,7 +37,7 @@ namespace APIKros.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Employee employee)
+        public async Task<IActionResult> Create([FromBody] EmployeeDTO employee)
         {
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();

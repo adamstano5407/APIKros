@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace APIKros.Models
 {
+    
     public class Project
 {
     public int Id { get; set; }

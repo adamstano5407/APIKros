@@ -37,10 +37,18 @@ namespace APIKros.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Company company)
+        public async Task<IActionResult> Create([FromBody] CompanyDTO dto)
         {
+            var company = new Company
+            {
+                Name = dto.Name,
+                Code = dto.Code,
+                DirectorId = dto.DirectorId
+            };
+
             _context.Companies.Add(company);
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetById), new { id = company.Id }, company);
         }
 
