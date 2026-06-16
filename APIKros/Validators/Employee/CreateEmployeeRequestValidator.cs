@@ -2,7 +2,7 @@ using APIKros.Data;
 using APIKros.Models;
 using APIKros.Requests;
 using FluentValidation;
-using FluentValidation.AspNetCore;
+
 
 namespace APIKros.Validators;
 

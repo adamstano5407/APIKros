@@ -21,6 +21,7 @@ namespace APIKros.Controllers
         }
 
         [HttpGet]
+        [EndpointName("GetAllEmployees")]
         public async Task<IActionResult> GetAll()
         {
             var employees = await _context.Employees
@@ -32,6 +33,7 @@ namespace APIKros.Controllers
 
 
         [HttpGet("{id}")]
+        [EndpointName("GetEmployeeById")]
         public async Task<IActionResult> GetById(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
@@ -42,7 +44,12 @@ namespace APIKros.Controllers
             return Ok(EmployeeDTO.CreateInstance(employee));
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateEmployee")]
+[EndpointName("CreateEmployee")]
+[EndpointSummary("Create employee")]
+[EndpointDescription("Creates a new employee and assigns the employee to a company.")]
+[ProducesResponseType(typeof(EmployeeDTO), StatusCodes.Status201Created)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateEmployeeRequest request)
         {
             var employee = new Employee
@@ -54,7 +61,7 @@ namespace APIKros.Controllers
                 Phone = request.Phone,
                 CompanyId = request.CompanyId
             };
-
+                
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
@@ -66,6 +73,8 @@ namespace APIKros.Controllers
         }
 
         [HttpPut("{id}")]
+        [EndpointName("UpdateEmployee")]
+
         public async Task<IActionResult> Update(int id, [FromBody] UpdateEmployeeRequest request)
         {
             var employee = await _context.Employees.FindAsync(id);

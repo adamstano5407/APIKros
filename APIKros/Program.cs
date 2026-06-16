@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using APIKros.Validators;
 using FluentValidation;
-using FluentValidation.AspNetCore;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 //fluent validation
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeRequestValidator>();
 
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
