@@ -1,6 +1,8 @@
-namespace APIKros.DTOs;
-
-public interface IDto<TEntity, TDto>
+namespace APIKros.DTOs
 {
-    static abstract TDto CreateInstance(TEntity entity);
+    public interface IDto<TEntity, TDto>
+    {
+        static abstract TDto CreateInstance(TEntity entity);
+    }
+
 }

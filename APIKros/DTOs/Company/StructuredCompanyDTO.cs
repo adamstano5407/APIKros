@@ -1,32 +1,36 @@
 using APIKros.Models;
+using System.Linq;
 
-namespace APIKros.DTOs;
-
-public class StructuredCompanyDTO : IDto<Company, StructuredCompanyDTO>
+namespace APIKros.DTOs
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = "";
-    public string Code { get; set; } = "";
-    public EmployeeDTO? Director { get; set; }
-    public List<StructuredDivisionDTO> Divisions { get; set; } = new();
-    public List<EmployeeDTO> Employees { get; set; } = new();
-
-    public static StructuredCompanyDTO CreateInstance(Company company)
+    public class StructuredCompanyDTO : IDto<Company, StructuredCompanyDTO>
     {
-        return new StructuredCompanyDTO
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Code { get; set; } = "";
+        public EmployeeDTO? Director { get; set; }
+        public List<StructuredDivisionDTO> Divisions { get; set; } = new();
+        public List<EmployeeDTO> Employees { get; set; } = new();
+
+        public static StructuredCompanyDTO CreateInstance(Company company)
         {
-            Id = company.Id,
-            Name = company.Name,
-            Code = company.Code,
-            Director = company.Director is null
-                ? null
-                : EmployeeDTO.CreateInstance(company.Director),
-            Divisions = company.Divisions
-                .Select(StructuredDivisionDTO.CreateInstance)
-                .ToList(),
-            Employees = company.Employees
-                .Select(EmployeeDTO.CreateInstance)
-                .ToList()
-        };
+            return new StructuredCompanyDTO
+            {
+                Id = company.Id,
+                Name = company.Name,
+                Code = company.Code,
+                Director = company.Director is null
+                    ? null
+                    : EmployeeDTO.CreateInstance(company.Director),
+                Divisions = company.Divisions
+                    .Select(StructuredDivisionDTO.CreateInstance)
+                    .ToList(),
+                Employees = company.Employees
+                    .Select(EmployeeDTO.CreateInstance)
+                    .ToList()
+            };
+        }
     }
+
+
 }

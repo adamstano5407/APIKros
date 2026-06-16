@@ -1,4 +1,6 @@
 using APIKros.Models;
+using System.Linq;
+
 
 namespace APIKros.DTOs;
 
@@ -6,7 +8,7 @@ public class EmployeeDTO : IDto<Employee, EmployeeDTO>
 {
     public int Id { get; set; }
 
-    public string Titile { get; set; } = "";
+    public string Title { get; set; } = "";
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";
     public string Email { get; set; } = "";

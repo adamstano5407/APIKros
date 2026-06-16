@@ -1,4 +1,6 @@
 using APIKros.Models;
+using System.Linq;
+
 
 namespace APIKros.DTOs;
 
@@ -24,9 +26,7 @@ public class StructuredDivisionDTO : IDto<Division, StructuredDivisionDTO>
                 : EmployeeDTO.CreateInstance(division.Manager),
             Projects = division.Projects is null
                 ? null
-                : division.Projects
-    .Select(StructuredProjectDTO.CreateInstance)
-    .ToList()
+                : division.Projects.Select(DetailedProjectDTO.CreateInstance).ToList()
         };
     }
 }
