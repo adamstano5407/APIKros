@@ -6,8 +6,8 @@ namespace APIKros.DTOs
     public class StructuredCompanyDTO : IDto<Company, StructuredCompanyDTO>
     {
         public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Code { get; set; } = "";
+        public string Name { get; set; } = null!;
+        public string Code { get; set; } = null!;
         public EmployeeDTO? Director { get; set; }
         public List<StructuredDivisionDTO> Divisions { get; set; } = new();
         public List<EmployeeDTO> Employees { get; set; } = new();

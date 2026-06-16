@@ -1,4 +1,4 @@
-namespace APIKRos.Requests.Company
+namespace APIKRos.Requests
 {
     public class DeleteCompanyRequest
     {
