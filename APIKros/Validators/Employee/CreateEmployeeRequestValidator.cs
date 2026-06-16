@@ -1,7 +1,8 @@
 using APIKros.Data;
 using APIKros.Models;
-using APIKRos.Requests;
+using APIKros.Requests;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 
 namespace APIKros.Validators;
 
@@ -27,13 +28,15 @@ public class CreateEmployeeRequestValidator : AbstractValidator<CreateEmployeeRe
             .MaximumLength(100).WithMessage("Last name must not exceed 100 characters.");
 
         RuleFor(x => x.Email)
-            .Cascade(CascadeMode.Stop)
-            .NotEmpty().WithMessage("Email is required.")
-            .EmailAddress().WithMessage("Email has invalid format.")
-            .MaximumLength(255).WithMessage("Email must not exceed 255 characters.")
-            .MustAsync((email, cancellationToken) =>
-                ValidationUtils.IsUniqueEmail(email, cancellationToken, _context))
-            .WithMessage("Employee with this email already exists.");
+             .NotEmpty()
+             .EmailAddress()
+             .MustAsync((email, cancellation) =>
+                 ValidationUtils.IsUnique<Employee, string>(
+                     _context,
+                     "Email",
+                     email!,
+                     cancellation))
+             .WithMessage("Employee with this Email already exists.");
 
         RuleFor(x => x.Phone)
             .NotEmpty().WithMessage("Phone is required.")

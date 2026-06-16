@@ -10,7 +10,7 @@ namespace APIKros.DTOs
         public string Code { get; set; } = "";
         public EmployeeDTO? Manager { get; set; }
 
-        public ProjectDTO? Project { get; set; }
+        public ProjectDTO Project { get; set; } = null!;
 
         public static DetailedDepartmentDTO CreateInstance(Department department)
         {

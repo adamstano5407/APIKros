@@ -1,3 +1,8 @@
+using APIKros.Data;
+using APIKros.Models;
+using APIKros.Requests;
+using FluentValidation;
+
 namespace APIKros.Validators;
 
 public class UpdateEmployeeRequestValidator : AbstractValidator<UpdateEmployeeRequest>
@@ -8,14 +13,18 @@ public class UpdateEmployeeRequestValidator : AbstractValidator<UpdateEmployeeRe
     {
         _context = context;
 
-        RuleFor(x => x.Id)
-            .NotEmpty().WithMessage("Id is required.");
-
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email is required.")
             .EmailAddress().WithMessage("Email has invalid format.")
             .MaximumLength(255).WithMessage("Email must not exceed 255 characters.")
-            .MustAsync(IsUniqueEmail).WithMessage("Employee with this email already exists.");
-        
+            .When(x => !string.IsNullOrWhiteSpace(x.Email));
+
+        RuleFor(x => x.CompanyId)
+            .MustAsync((companyId, cancellation) =>
+                ValidationUtils.EntityExists<Company>(
+                    _context,
+                    companyId!.Value,
+                    cancellation))
+            .WithMessage("Company does not exist.")
+            .When(x => x.CompanyId.HasValue);
     }
 }

@@ -1,4 +1,4 @@
-namespace APIKRos.Requests
+namespace APIKros.Requests
 {
     public class CreateCompanyRequest 
     {

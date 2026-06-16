@@ -1,9 +1,9 @@
 using FluentValidation;
-using APIKRos.Requests.Company;
-using APIKRos.Data;
+using APIKros.Data;
 using Microsoft.EntityFrameworkCore;
+using APIKros.Requests;
 
-namespace APIKRos.Validators
+namespace APIKros.Validators
 {
     public class UpdateCompanyRequestValidator : AbstractValidator<UpdateCompanyRequest>
     {
@@ -13,8 +13,6 @@ namespace APIKRos.Validators
         {
             _context = context;
 
-            RuleFor(x => x.Id)
-                .NotEmpty().WithMessage("Id is required.");
         }
     }
 }

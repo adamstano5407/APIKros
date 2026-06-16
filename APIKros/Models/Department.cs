@@ -12,7 +12,7 @@ namespace APIKros.Models
 
     [Required]
     public string Code { get; set; } = null!;
-    public int? ProjectId { get; set; }
+    public int ProjectId { get; set; }
     public Project? Project { get; set; }
 
     public int? ManagerId { get; set; }

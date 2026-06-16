@@ -14,9 +14,9 @@ public class Division
 
         public Company Company { get; set; } = null!;
 
-        public int ManagerId { get; set; } 
+        public int? ManagerId { get; set; } 
 
-        public Employee Manager { get; set; } = null!;
+        public Employee? Manager { get; set; }
 
         public ICollection<Project> Projects { get; set; } = new List<Project>();
 

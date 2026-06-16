@@ -1,5 +1,7 @@
 
+using APIKros.Data;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIKros.Validators
 {
@@ -13,10 +15,32 @@ namespace APIKros.Validators
         "doc.", "prof.", "PhD.", "MBA"
     };
 
-        public static async Task<bool> IsUniqueEmail(string email, CancellationToken cancellationToken, AppDbContext context)
+        public static async Task<bool> IsUnique<TEntity, TValue>(
+          AppDbContext context,
+          string propertyName,
+          TValue value,
+          CancellationToken cancellationToken)
+          where TEntity : class
         {
-            return !await context.Employees
-                .AnyAsync(e => e.Email == email, cancellationToken);
+            return !await context.Set<TEntity>()
+                .AnyAsync(e =>
+                    EF.Property<TValue>(e, propertyName)!.Equals(value),
+                    cancellationToken);
+        }
+
+        public static async Task<bool> IsUniqueForUpdate<TEntity, TValue>(
+           AppDbContext context,
+           string propertyName,
+           TValue value,
+           int id,
+           CancellationToken cancellationToken)
+           where TEntity : class
+        {
+            return !await context.Set<TEntity>()
+                .AnyAsync(e =>
+                    EF.Property<TValue>(e, propertyName)!.Equals(value) &&
+                    EF.Property<int>(e, "Id") != id,
+                    cancellationToken);
         }
 
         public static bool IsValidPhone(string? phone)

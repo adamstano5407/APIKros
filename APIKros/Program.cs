@@ -1,6 +1,9 @@
 using APIKros.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using APIKros.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 //fluent validation
-builder.Services.AddValidatorsFromAssemblyContaining<CreateCompanyRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 
 
