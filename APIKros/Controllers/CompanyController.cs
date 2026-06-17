@@ -4,6 +4,7 @@ using APIKros.Models;
 using APIKros.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using APIKros.Requests.Company;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIKros.Controllers;

@@ -1,9 +1,8 @@
-using FluentValidation;
 using APIKros.Data;
-using Microsoft.EntityFrameworkCore;
-using APIKros.Requests;
+using APIKros.Requests.Company;
+using FluentValidation;
 
-namespace APIKros.Validators
+namespace APIKros.Validators.Company
 {
     public class UpdateCompanyRequestValidator : AbstractValidator<UpdateCompanyRequest>
     {

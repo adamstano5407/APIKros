@@ -1,4 +1,4 @@
-namespace APIKros.Requests
+namespace APIKros.Requests.Company
 {
     public class UpdateCompanyRequest
     {

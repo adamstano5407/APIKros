@@ -1,9 +1,8 @@
-
 using APIKros.Data;
 using APIKros.DTOs;
 using APIKros.Models;
 using APIKros.Requests;
-using APIKros.Validators;
+using APIKros.Requests.Employee;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +13,7 @@ namespace APIKros.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly AppDbContext _context;
-
+        
         public EmployeeController(AppDbContext context)
         {
             _context = context;
@@ -45,11 +44,11 @@ namespace APIKros.Controllers
         }
 
         [HttpPost(Name = "CreateEmployee")]
-[EndpointName("CreateEmployee")]
-[EndpointSummary("Create employee")]
-[EndpointDescription("Creates a new employee and assigns the employee to a company.")]
-[ProducesResponseType(typeof(EmployeeDTO), StatusCodes.Status201Created)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [EndpointName("CreateEmployee")]
+        [EndpointSummary("Create employee wi")]
+        [EndpointDescription("Creates a new employee and assigns the employee to a company.")]
+        [ProducesResponseType(typeof(EmployeeDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateEmployeeRequest request)
         {
             var employee = new Employee
@@ -64,7 +63,6 @@ namespace APIKros.Controllers
                 
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction(
                 nameof(GetById),
                 new { id = employee.Id },

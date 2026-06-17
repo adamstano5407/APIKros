@@ -1,6 +1,6 @@
 
 
-namespace APIKros.Requests
+namespace APIKros.Requests.Employee
 {
     public class ChangeCompanyRequest
     {

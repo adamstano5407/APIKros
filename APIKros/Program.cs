@@ -2,6 +2,7 @@ using APIKros.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using APIKros.Validators;
+using APIKros.Validators.Employee;
 using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 

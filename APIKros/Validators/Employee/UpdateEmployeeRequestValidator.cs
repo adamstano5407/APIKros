@@ -1,9 +1,8 @@
 using APIKros.Data;
-using APIKros.Models;
-using APIKros.Requests;
+using APIKros.Requests.Employee;
 using FluentValidation;
 
-namespace APIKros.Validators;
+namespace APIKros.Validators.Employee;
 
 public class UpdateEmployeeRequestValidator : AbstractValidator<UpdateEmployeeRequest>
 {
@@ -20,7 +19,7 @@ public class UpdateEmployeeRequestValidator : AbstractValidator<UpdateEmployeeRe
 
         RuleFor(x => x.CompanyId)
             .MustAsync((companyId, cancellation) =>
-                ValidationUtils.EntityExists<Company>(
+                ValidationUtils.EntityExists<Models.Company>(
                     _context,
                     companyId!.Value,
                     cancellation))

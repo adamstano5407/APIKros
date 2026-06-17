@@ -1,10 +1,8 @@
 using APIKros.Data;
-using APIKros.Models;
-using APIKros.Requests;
+using APIKros.Requests.Employee;
 using FluentValidation;
 
-
-namespace APIKros.Validators;
+namespace APIKros.Validators.Employee;
 
 public class CreateEmployeeRequestValidator : AbstractValidator<CreateEmployeeRequest>
 {
@@ -31,7 +29,7 @@ public class CreateEmployeeRequestValidator : AbstractValidator<CreateEmployeeRe
              .NotEmpty()
              .EmailAddress()
              .MustAsync((email, cancellation) =>
-                 ValidationUtils.IsUnique<Employee, string>(
+                 ValidationUtils.IsUnique<Models.Employee, string>(
                      _context,
                      "Email",
                      email!,
@@ -48,7 +46,7 @@ public class CreateEmployeeRequestValidator : AbstractValidator<CreateEmployeeRe
             .NotNull().WithMessage("Company id is required.")
             .GreaterThan(0).WithMessage("Company id must be greater than 0.")
             .MustAsync((companyId, cancellationToken) =>
-                ValidationUtils.EntityExists<Company>(_context, companyId, cancellationToken))
+                ValidationUtils.EntityExists<Models.Company>(_context, companyId, cancellationToken))
             .WithMessage("Company does not exist.");
     }
 }

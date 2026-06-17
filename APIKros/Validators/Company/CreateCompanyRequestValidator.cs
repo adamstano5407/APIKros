@@ -1,9 +1,9 @@
 using APIKros.Data;
 using APIKros.Models;
-using APIKros.Requests;
+using APIKros.Requests.Company;
 using FluentValidation;
 
-namespace APIKros.Validators;
+namespace APIKros.Validators.Company;
 
 public class CreateCompanyRequestValidator : AbstractValidator<CreateCompanyRequest>
 {
@@ -21,7 +21,7 @@ public class CreateCompanyRequestValidator : AbstractValidator<CreateCompanyRequ
             .NotEmpty().WithMessage("Code is required.")
             .MaximumLength(50).WithMessage("Code must not exceed 50 characters.")
             .MustAsync((code, cancellation) =>
-                ValidationUtils.IsUnique<Company, string>(
+                ValidationUtils.IsUnique<Models.Company, string>(
                     _context,
                     "Code",
                     code!,
@@ -30,7 +30,7 @@ public class CreateCompanyRequestValidator : AbstractValidator<CreateCompanyRequ
 
         RuleFor(x => x.DirectorId)
             .MustAsync((directorId, cancellation) =>
-                ValidationUtils.EntityExists<Employee>(
+                ValidationUtils.EntityExists<Models.Employee>(
                     _context,
                     directorId,
                     cancellation))
