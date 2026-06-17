@@ -1,5 +1,6 @@
 using APIKros.Data;
 using APIKros.DTOs;
+using APIKros.DTOs.Employee;
 using APIKros.Models;
 using APIKros.Requests.Employee;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +23,11 @@ namespace APIKros.Controllers
         [EndpointName("GetAllEmployees")]
         [EndpointSummary("Get all employees")]
         [EndpointDescription("Returns a list of all employees")]
-        [ProducesResponseType(typeof(IEnumerable<EmployeeDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<EmployeeDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
             var employees = await _context.Employees
-             .Select(e => EmployeeDTO.CreateInstance(e))
+             .Select(e => EmployeeDto.CreateInstance(e))
              .ToListAsync();
 
             return Ok(employees);
@@ -37,7 +38,7 @@ namespace APIKros.Controllers
         [EndpointName("GetEmployeeDetail")]
         [EndpointSummary("Get employee by ID")]
         [EndpointDescription("Returns a single employee by the specified identifier.")]
-        [ProducesResponseType(typeof(EmployeeDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EmployeeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
@@ -46,7 +47,7 @@ namespace APIKros.Controllers
             {
                 return NotFound();
             }
-            return Ok(EmployeeDTO.CreateInstance(employee));
+            return Ok(EmployeeDto.CreateInstance(employee));
         }
 
         [HttpPost(Name = "CreateEmployee")]
@@ -57,7 +58,7 @@ namespace APIKros.Controllers
             "The employee record includes personal and contact information such as title, name, email, and phone number. " +
             "Returns the created employee with its generated identifier."
         )]
-        [ProducesResponseType(typeof(EmployeeDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(EmployeeDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] CreateEmployeeRequest request)
@@ -77,7 +78,7 @@ namespace APIKros.Controllers
             return CreatedAtAction(
                 nameof(GetById),
                 new { id = employee.Id },
-                EmployeeDTO.CreateInstance(employee)
+                EmployeeDto.CreateInstance(employee)
             );
         }
 
@@ -95,6 +96,22 @@ namespace APIKros.Controllers
             if (employee == null)
                 return NotFound();
 
+            var targetCompanyId = request.CompanyId ?? employee.CompanyId;
+
+            if (request.EmployeeNumber is not null)
+            {
+                var employeeNumberExists = await _context.Employees
+                    .AnyAsync(e =>
+                        e.CompanyId == targetCompanyId &&
+                        e.EmployeeNumber == request.EmployeeNumber &&
+                        e.Id != id);
+
+                if (employeeNumberExists)
+                    return BadRequest("Employee number already exists in this company.");
+
+                employee.EmployeeNumber = request.EmployeeNumber;
+            }
+
             if (request.Title is not null)
                 employee.Title = request.Title;
 
@@ -111,6 +128,8 @@ namespace APIKros.Controllers
 
                 if (emailExists)
                     return BadRequest("Employee with this email already exists.");
+
+                employee.Email = request.Email;
             }
 
             if (request.Phone is not null)
@@ -134,46 +153,18 @@ namespace APIKros.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
+
             if (employee is null)
                 return NotFound("Employee not found.");
-
-            var companies = await _context.Companies
-                .Where(c => c.DirectorId == id)
-                .ToListAsync();
-
-            foreach (var company in companies)
-                company.DirectorId = null;
-
-            var divisions = await _context.Divisions
-                .Where(d => d.ManagerId == id)
-                .ToListAsync();
-
-            foreach (var division in divisions)
-                division.ManagerId = null;
-
-            var projects = await _context.Projects
-                .Where(p => p.ManagerId == id)
-                .ToListAsync();
-
-            foreach (var project in projects)
-                project.ManagerId = null;
-
-            var departments = await _context.Departments
-                .Where(d => d.ManagerId == id)
-                .ToListAsync();
-
-            foreach (var department in departments)
-                department.ManagerId = null;
 
             _context.Employees.Remove(employee);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
+        
 
-
-
-        [HttpPut("{id}/company/{companyId}")]
+        [HttpPut("change-company")]
         [EndpointName("ChangeEmployeeCompany")]
         [EndpointSummary("Change employee company")]
         [EndpointDescription(
@@ -184,45 +175,31 @@ namespace APIKros.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ChangeCompany(int id, int companyId)
+        public async Task<IActionResult> ChangeCompany([FromBody] ChangeCompanyRequest request)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee is null)
-                return NotFound("Employee not found.");
+            var employee = await _context.Employees.FindAsync(request.EmployeeId);
 
-            var companyExists = await _context.Companies.AnyAsync(c => c.Id == companyId);
-            if (!companyExists)
-                return BadRequest("Company does not exist.");
+            employee!.CompanyId = request.NewCompanyId;
 
-            var companies = await _context.Companies
-                .Where(c => c.DirectorId == id)
-                .ToListAsync();
+            await _context.Companies
+                .Where(c => c.DirectorId == request.EmployeeId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(c => c.DirectorId, (int?)null));
 
-            foreach (var company in companies)
-                company.DirectorId = null;
+            await _context.Divisions
+                .Where(d => d.ManagerId == request.EmployeeId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(d => d.ManagerId, (int?)null));
 
-            var divisions = await _context.Divisions
-                .Where(d => d.ManagerId == id)
-                .ToListAsync();
+            await _context.Projects
+                .Where(p => p.ManagerId == request.EmployeeId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(p => p.ManagerId, (int?)null));
 
-            foreach (var division in divisions)
-                division.ManagerId = null;
-
-            var projects = await _context.Projects
-                .Where(p => p.ManagerId == id)
-                .ToListAsync();
-
-            foreach (var project in projects)
-                project.ManagerId = null;
-
-            var departments = await _context.Departments
-                .Where(d => d.ManagerId == id)
-                .ToListAsync();
-
-            foreach (var department in departments)
-                department.ManagerId = null;
-
-            employee.CompanyId = companyId;
+            await _context.Departments
+                .Where(d => d.ManagerId == request.EmployeeId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(d => d.ManagerId, (int?)null));
 
             await _context.SaveChangesAsync();
 

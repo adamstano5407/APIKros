@@ -1,6 +1,7 @@
 using APIKros.Data;
 using APIKros.Requests.Employee;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIKros.Validators.Employee;
 
@@ -11,6 +12,7 @@ public class UpdateEmployeeRequestValidator : AbstractValidator<UpdateEmployeeRe
     public UpdateEmployeeRequestValidator(AppDbContext context)
     {
         _context = context;
+        
 
         RuleFor(x => x.Email)
             .EmailAddress().WithMessage("Email has invalid format.")

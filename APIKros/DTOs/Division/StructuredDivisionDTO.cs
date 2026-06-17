@@ -1,33 +1,31 @@
-using APIKros.Models;
-using System.Linq;
+using APIKros.DTOs.Company;
+using APIKros.DTOs.Employee;
+using APIKros.DTOs.Project;
 
-
-namespace APIKros.DTOs
+namespace APIKros.DTOs.Division
 {
 
-    public class StructuredDivisionDTO : IDto<Division, StructuredDivisionDTO>
+    public class StructuredDivisionDto : IDto<Models.Division, StructuredDivisionDto>
     {
         public int Id { get; set; }
         public string Name { get; set; } = "";
         public string Code { get; set; } = "";
-        public CompanyDTO Company { get; set; }
-        public EmployeeDTO? Manager { get; set; }
+        public CompanyDto? Company { get; set; }
+        public EmployeeDto? Manager { get; set; }
 
-        public List<DetailedProjectDTO> Projects { get; set; } = new();
-        public static StructuredDivisionDTO CreateInstance(Division division)
+        public List<DetailedProjectDto> Projects { get; set; } = new();
+        public static StructuredDivisionDto CreateInstance(Models.Division division)
         {
-            return new StructuredDivisionDTO
+            return new StructuredDivisionDto
             {
                 Id = division.Id,
                 Name = division.Name,
                 Code = division.Code,
-                Company = CompanyDTO.CreateInstance(division.Company),
+                Company = CompanyDto.CreateInstance(division.Company),
                 Manager = division.Manager is null
                     ? null
-                    : EmployeeDTO.CreateInstance(division.Manager),
-                Projects = division.Projects is null
-                    ? null
-                    : division.Projects.Select(DetailedProjectDTO.CreateInstance).ToList()
+                    : EmployeeDto.CreateInstance(division.Manager),
+                Projects = division.Projects.Select(DetailedProjectDto.CreateInstance).ToList()
             };
         }
     }

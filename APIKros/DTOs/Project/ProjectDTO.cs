@@ -1,10 +1,6 @@
-using APIKros.Models;
-using System.Linq;
+namespace APIKros.DTOs.Project;
 
-
-namespace APIKros.DTOs;
-
-public class ProjectDTO : IDto<Project, ProjectDTO>
+public class ProjectDto : IDto<Models.Project, ProjectDto>
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
@@ -12,9 +8,9 @@ public class ProjectDTO : IDto<Project, ProjectDTO>
     public int DivisionId { get; set; }
     public int? ManagerId { get; set; }
 
-    public static ProjectDTO CreateInstance(Project project)
+    public static ProjectDto CreateInstance(Models.Project project)
     {
-        return new ProjectDTO
+        return new ProjectDto
         {
             Id = project.Id,
             Name = project.Name,

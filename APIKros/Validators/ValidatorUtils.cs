@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace APIKros.Validators
 {
-
+    // Utility for Validation 
     public static class ValidationUtils
     {
         private static readonly string[] AllowedTitles =

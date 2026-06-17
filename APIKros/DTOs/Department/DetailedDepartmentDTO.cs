@@ -1,30 +1,30 @@
-using APIKros.Models;
-using System.Linq;
+using APIKros.DTOs.Employee;
+using APIKros.DTOs.Project;
 
-namespace APIKros.DTOs
+namespace APIKros.DTOs.Department
 {
-    public class DetailedDepartmentDTO : IDto<Department, DetailedDepartmentDTO>
+    public class DetailedDepartmentDto : IDto<Models.Department, DetailedDepartmentDto>
     {
         public int Id { get; set; }
         public string Name { get; set; } = "";
         public string Code { get; set; } = "";
-        public EmployeeDTO? Manager { get; set; }
+        public EmployeeDto? Manager { get; set; }
 
-        public ProjectDTO Project { get; set; } = null!;
+        public ProjectDto? Project { get; set; } = null!;
 
-        public static DetailedDepartmentDTO CreateInstance(Department department)
+        public static DetailedDepartmentDto CreateInstance(Models.Department department)
         {
-            return new DetailedDepartmentDTO
+            return new DetailedDepartmentDto
             {
                 Id = department.Id,
                 Name = department.Name,
                 Code = department.Code,
                 Manager = department.Manager is null
                     ? null
-                    : EmployeeDTO.CreateInstance(department.Manager),
+                    : EmployeeDto.CreateInstance(department.Manager),
                 Project = department.Project is null
                     ? null
-                    : ProjectDTO.CreateInstance(department.Project),
+                    : ProjectDto.CreateInstance(department.Project),
             };
         }
     }

@@ -1,13 +1,10 @@
-using APIKros.Models;
-using System.Linq;
+namespace APIKros.DTOs.Employee;
 
-
-namespace APIKros.DTOs;
-
-public class EmployeeDTO : IDto<Employee, EmployeeDTO>
+public class EmployeeDto : IDto<Models.Employee, EmployeeDto>
 {
     public int Id { get; set; }
-
+    
+    public string EmployeeNumber { get; set; } = null!;
     public string? Title { get; set; }
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
@@ -15,9 +12,9 @@ public class EmployeeDTO : IDto<Employee, EmployeeDTO>
     public string Phone { get; set; } = null!;
     public int CompanyId { get; set; } 
 
-    public static EmployeeDTO CreateInstance(Employee employee)
+    public static EmployeeDto CreateInstance(Models.Employee employee)
     {
-        return new EmployeeDTO
+        return new EmployeeDto
         {
             Id = employee.Id,
             Title = employee.Title,

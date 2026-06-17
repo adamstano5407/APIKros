@@ -42,7 +42,11 @@ namespace APIKros.Data
                 .HasIndex(e => new { e.CompanyId, e.Email })
                 .IsUnique();
 
-
+            modelBuilder.Entity<Employee>()
+                .HasIndex(e => new { e.CompanyId, e.EmployeeNumber })
+                .IsUnique();
+            
+            
 
             // Configure relationships and foreign keys of hierarchical structure
 
@@ -74,34 +78,32 @@ namespace APIKros.Data
 
            
 
-           // Configure relationships for Manager and Director properties with DeleteBehavior.Restrict to prevent cascading deletes
+           // Configure relationships for Manager and Director properties nullable, onDelete will be set null, can be assigned later. 
            modelBuilder.Entity<Company>()
                 .HasOne(c => c.Director)
                 .WithMany()
                 .HasForeignKey(c => c.DirectorId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Division>()
-                .HasOne(d => d.Manager)
-                .WithMany()
-                .HasForeignKey(d => d.ManagerId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
+
+           modelBuilder.Entity<Division>()
+               .HasOne(d => d.Manager)
+               .WithMany()
+               .HasForeignKey(d => d.ManagerId)
+               .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Project>()
                 .HasOne(p => p.Manager)
                 .WithMany()
                 .HasForeignKey(p => p.ManagerId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.SetNull);
+               
 
             modelBuilder.Entity<Department>()
                 .HasOne(d => d.Manager)
                 .WithMany()
                 .HasForeignKey(d => d.ManagerId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
-        }
+                .OnDelete(DeleteBehavior.SetNull);
+}
     }
 }

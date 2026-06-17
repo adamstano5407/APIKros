@@ -1,6 +1,8 @@
+using System.Data;
 using APIKros.Data;
 using APIKros.Requests.Employee;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIKros.Validators.Employee;
 
@@ -11,7 +13,16 @@ public class CreateEmployeeRequestValidator : AbstractValidator<CreateEmployeeRe
     public CreateEmployeeRequestValidator(AppDbContext context)
     {
         _context = context;
-
+        RuleFor(x => x.EmployeeNumber)
+            .NotEmpty()
+            .WithMessage("EmployeeNumber is required.")
+            .MustAsync(async (request, employeeNumber, cancellation) =>
+                !await _context.Employees.AnyAsync(
+                    e => e.CompanyId == request.CompanyId &&
+                         e.EmployeeNumber == employeeNumber,
+                    cancellation))
+            .WithMessage("Employee number already exists in this company.");
+        
         RuleFor(x => x.Title)
             .MaximumLength(80)
             .Must(ValidationUtils.IsAllowedTitle)

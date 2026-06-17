@@ -1,9 +1,6 @@
-using APIKros.Models;
-using System.Linq;
-
-namespace APIKros.DTOs
+namespace APIKros.DTOs.Department
 {
-    public class DepartmentDTO : IDto<Department, DepartmentDTO>
+    public class DepartmentDto : IDto<Models.Department, DepartmentDto>
     {
         public int Id { get; set; }
         public string Name { get; set; } = "";
@@ -11,9 +8,9 @@ namespace APIKros.DTOs
         public int ProjectId { get; set; }
         public int? ManagerId { get; set; }
 
-        public static DepartmentDTO CreateInstance(Department department)
+        public static DepartmentDto CreateInstance(Models.Department department)
         {
-            return new DepartmentDTO
+            return new DepartmentDto
             {
                 Id = department.Id,
                 Name = department.Name,
