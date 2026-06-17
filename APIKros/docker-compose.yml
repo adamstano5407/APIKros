@@ -3,13 +3,14 @@ services:
     build:
       context: ../
       dockerfile: APIKros/Dockerfile.dev
-   
+    
     container_name: api
     working_dir: /src/APIKros
-    user: "1000:1000"
     volumes:
       - ../:/src
-    command: dotnet watch run --urls http://0.0.0.0:8080
+      - api_bin:/src/APIKros/bin
+      - api_obj:/src/APIKros/obj
+      - nuget_cache:/home/ubuntu/.nuget/packages
     ports:
       - "127.0.0.1:8080:8080"
     environment:
@@ -51,6 +52,9 @@ services:
 
 volumes:
   sqlserver_data:
+  api_bin:
+  api_obj:
+  nuget_cache:
 
 networks:
   app_network:

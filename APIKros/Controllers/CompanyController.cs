@@ -20,7 +20,7 @@ public class CompanyController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet] 
     public async Task<IActionResult> GetAll()
     {
         var companies = await _context.Companies

@@ -1,7 +1,6 @@
 using APIKros.Data;
 using APIKros.DTOs;
 using APIKros.Models;
-using APIKros.Requests;
 using APIKros.Requests.Employee;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +20,9 @@ namespace APIKros.Controllers
 
         [HttpGet]
         [EndpointName("GetAllEmployees")]
+        [EndpointSummary("Get all employees")]
+        [EndpointDescription("Returns a list of all employees")]
+        [ProducesResponseType(typeof(IEnumerable<EmployeeDTO>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
             var employees = await _context.Employees
@@ -32,7 +34,11 @@ namespace APIKros.Controllers
 
 
         [HttpGet("{id}")]
-        [EndpointName("GetEmployeeById")]
+        [EndpointName("GetEmployeeDetail")]
+        [EndpointSummary("Get employee by ID")]
+        [EndpointDescription("Returns a single employee by the specified identifier.")]
+        [ProducesResponseType(typeof(EmployeeDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
@@ -45,10 +51,15 @@ namespace APIKros.Controllers
 
         [HttpPost(Name = "CreateEmployee")]
         [EndpointName("CreateEmployee")]
-        [EndpointSummary("Create employee wi")]
-        [EndpointDescription("Creates a new employee and assigns the employee to a company.")]
+        [EndpointSummary("Create a new employee")]
+        [EndpointDescription(
+            "Creates a new employee and assigns them to an existing company. " +
+            "The employee record includes personal and contact information such as title, name, email, and phone number. " +
+            "Returns the created employee with its generated identifier."
+        )]
         [ProducesResponseType(typeof(EmployeeDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] CreateEmployeeRequest request)
         {
             var employee = new Employee
@@ -72,7 +83,11 @@ namespace APIKros.Controllers
 
         [HttpPut("{id}")]
         [EndpointName("UpdateEmployee")]
-
+        [EndpointSummary("Update employee")]
+        [EndpointDescription("Updates an existing employee by ID. Only provided fields are changed.")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateEmployeeRequest request)
         {
             var employee = await _context.Employees.FindAsync(id);
@@ -109,7 +124,13 @@ namespace APIKros.Controllers
             return NoContent();
         }
 
+        
         [HttpDelete("{id}")]
+        [EndpointName("DeleteEmployee")]
+        [EndpointSummary("Delete employee")]
+        [EndpointDescription("Delete an existing employee out of company. That means he will be removed out of manager positions as well.")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
@@ -153,6 +174,16 @@ namespace APIKros.Controllers
 
 
         [HttpPut("{id}/company/{companyId}")]
+        [EndpointName("ChangeEmployeeCompany")]
+        [EndpointSummary("Change employee company")]
+        [EndpointDescription(
+            "Moves an employee to another company. " +
+            "If the employee is assigned as a director, division manager, project manager, or department manager, " +
+            "these leadership assignments are removed before changing the company."
+        )]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ChangeCompany(int id, int companyId)
         {
             var employee = await _context.Employees.FindAsync(id);
