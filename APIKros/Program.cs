@@ -1,4 +1,5 @@
 using APIKros.Data;
+using APIKros.Seeders;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using APIKros.Validators;
@@ -21,7 +22,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeRequestValida
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-    
+
 var connectionString =
     $"Server={Environment.GetEnvironmentVariable("DB_HOST")},{Environment.GetEnvironmentVariable("DB_PORT")};" +
     $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
@@ -34,12 +35,24 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
+if (args.Contains("--seed"))
+{
+    using var scope = app.Services.CreateScope();
+
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    await context.Database.MigrateAsync();
+    await DatabaseSeeder.SeedAsync(context);
+
+    return;
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
 
 app.UseHttpsRedirection();
 
