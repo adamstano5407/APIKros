@@ -4,13 +4,12 @@ RUN apt-get update \
     && apt-get install -y gosu \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /src/APIKros
-RUN dotnet tool install --global dotnet-ef
-RUN dotnet tool install --global TeaPie.Tool
+WORKDIR /src
 
-ENV PATH="${PATH}:/root/.dotnet/tools"
+RUN dotnet tool install --tool-path /usr/local/bin dotnet-ef
+RUN dotnet tool install --tool-path /usr/local/bin TeaPie.Tool
 
-COPY APIKros/entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 8080

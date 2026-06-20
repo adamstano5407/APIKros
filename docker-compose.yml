@@ -1,15 +1,15 @@
 services:
   api:
     build:
-      context: ../
-      dockerfile: APIKros/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     
     container_name: api
-    working_dir: /src/APIKros
+    working_dir: /src
     volumes:
-      - ../:/src
-      - api_bin:/src/APIKros/bin
-      - api_obj:/src/APIKros/obj
+      - .:/src
+      - api_bin:/src/bin
+      - api_obj:/src/obj
       - nuget_cache:/home/ubuntu/.nuget/packages
     ports: 
       - "127.0.0.1:8080:8080"
