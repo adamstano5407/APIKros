@@ -42,15 +42,14 @@ public class CreateEmployeeRequestValidator : AbstractValidator<CreateEmployeeRe
             .WithMessage("Last name can contain only letters, spaces, hyphens and apostrophes.");
 
         RuleFor(x => x.Email)
-             .NotEmpty()
-             .EmailAddress()
-             .MustAsync((email, cancellation) =>
-                 ValidationUtils.IsUnique<Models.Employee, string>(
-                     _context,
-                     "Email",
-                     email!,
-                     cancellation))
-             .WithMessage("Employee with this Email already exists.");
+            .NotEmpty()
+            .EmailAddress()
+            .MustAsync(async (request, email, cancellation) =>
+                !await _context.Employees.AnyAsync(
+                    e => e.CompanyId == request.CompanyId &&
+                         e.Email == email,
+                    cancellation))
+            .WithMessage("Employee with this Email already exists in this company.");
 
         RuleFor(x => x.Phone)
             .NotEmpty().WithMessage("Phone is required.")

@@ -27,6 +27,22 @@ namespace APIKros.Validators
                     EF.Property<TValue>(e, propertyName)!.Equals(value),
                     cancellationToken);
         }
+        
+        public static async Task<bool> IsUniqueForParent<TEntity>(
+            AppDbContext context,
+            string parentPropertyName,
+            int parentId,
+            string propertyName,
+            string value,
+            CancellationToken cancellation)
+            where TEntity : class
+        {
+            return !await context.Set<TEntity>()
+                .AnyAsync(e =>
+                        EF.Property<int>(e, parentPropertyName) == parentId &&
+                        EF.Property<string>(e, propertyName) == value,
+                    cancellation);
+        }
 
         public static async Task<bool> IsUniqueForUpdate<TEntity, TValue>(
            AppDbContext context,

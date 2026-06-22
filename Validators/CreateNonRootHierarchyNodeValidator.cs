@@ -11,19 +11,28 @@ public abstract class CreateNonRootHierarchyNodeValidator<TRequest, TModel, TPar
     where TModel : HierarchyNode
     where TParent : class
 {
-    protected CreateNonRootHierarchyNodeValidator(AppDbContext context)
+    protected CreateNonRootHierarchyNodeValidator(
+        AppDbContext context,
+        string parentPropertyName)
         : base(context)
     {
         RuleFor(x => x.ParentId)
             .GreaterThan(0).WithMessage("ParentId is required.")
             .MustAsync((parentId, ct) =>
-                ValidationUtils.EntityExists<TParent>(
-                    context,
-                    parentId,
-                    ct))
+                ValidationUtils.EntityExists<TParent>(context, parentId, ct))
             .WithMessage($"{typeof(TParent).Name} does not exist.");
+
+        RuleFor(x => x.Code)
+            .MustAsync((request, code, ct) =>
+                ValidationUtils.IsUniqueForParent<TModel>(
+                    context,
+                    parentPropertyName,
+                    request.ParentId,
+                    "Code",
+                    code!,
+                    ct))
+            .WithMessage($"{typeof(TModel).Name} with this Code already exists in parent.");
     }
-    
 }
 
 
@@ -34,7 +43,7 @@ public class CreateDivisionRequestValidator
         Models.Company>
 {
     public CreateDivisionRequestValidator(AppDbContext context)
-        : base(context)
+        : base(context, "CompanyId")
     {
     }
 }
@@ -45,7 +54,7 @@ public class CreateProjectRequestValidator
         Models.Division>
 {
     public CreateProjectRequestValidator(AppDbContext context)
-        : base(context)
+        : base(context, "DivisionId")
     {
     }
 }
@@ -57,7 +66,7 @@ public class CreateDepartmentRequestValidator
         Models.Project>
 {
     public CreateDepartmentRequestValidator(AppDbContext context)
-        : base(context)
+        : base(context, "ProjectId")
     {
     }
 }
