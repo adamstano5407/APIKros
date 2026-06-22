@@ -1,0 +1,118 @@
+--- TESTCASE 001-CreateHierarchyTesting
+
+--- INIT
+#load "../../.teapie/Definitions/Company/Company.csx"
+#load "../../.teapie/Definitions/Division/Division.csx"
+#load "../../.teapie/Definitions/Project/Project.csx"
+#load "../../.teapie/Definitions/Department/Department.csx"
+#load "../../.teapie/Definitions/Employee/Employee.csx"
+#load "../../.teapie/Definitions/Generator.csx"
+
+var company = GenerateCompany();
+var division = GenerateDivision();
+var project = GenerateProject();
+var department = GenerateDepartment();
+var employee = GenerateEmployee();
+
+tp.SetVariable("Company", company.ToJsonString(), "hierarchy");
+tp.SetVariable("Division", division.ToJsonString(), "hierarchy");
+tp.SetVariable("Project", project.ToJsonString(), "hierarchy");
+tp.SetVariable("Department", department.ToJsonString(), "hierarchy");
+tp.SetVariable("Employee", employee.ToJsonString(), "hierarchy");
+
+--- HTTP
+
+POST {{APP_URL}}/api/companies
+Content-Type: application/json
+
+{{Company}}
+
+###
+
+POST {{APP_URL}}/api/employees
+Content-Type: application/json
+
+{
+  "employeeNumber": "{{Employee.employeeNumber}}",
+  "title": "{{Employee.title}}",
+  "firstName": "{{Employee.firstName}}",
+  "lastName": "{{Employee.lastName}}",
+  "email": "{{Employee.email}}",
+  "phone": "{{Employee.phone}}",
+  "companyId": "{{response[0].body.id}}"
+}
+
+###
+
+POST {{APP_URL}}/api/divisions
+Content-Type: application/json
+
+{
+  "name": "{{Division.name}}",
+  "code": "{{Division.code}}",
+  "managerId": "{{response[1].body.id}}",
+  "parentId": "{{response[0].body.id}}"
+}
+
+###
+
+POST {{APP_URL}}/api/projects
+Content-Type: application/json
+
+{
+  "name": "{{Project.name}}",
+  "code": "{{Project.code}}",
+  "managerId": "{{response[1].body.id}}",
+  "parentId": "{{response[2].body.id}}"
+}
+
+###
+
+POST {{APP_URL}}/api/departments
+Content-Type: application/json
+
+{
+  "name": "{{Department.name}}",
+  "code": "{{Department.code}}",
+  "managerId": "{{response[1].body.id}}",
+  "parentId": "{{response[3].body.id}}"
+}
+
+--- TEST
+
+response[0].StatusCode.Should().Be(HttpStatusCode.Created);
+response[1].StatusCode.Should().Be(HttpStatusCode.Created);
+response[2].StatusCode.Should().Be(HttpStatusCode.Created);
+response[3].StatusCode.Should().Be(HttpStatusCode.Created);
+response[4].StatusCode.Should().Be(HttpStatusCode.Created);
+
+var createdCompany = response[0].GetJson<CompanyDto>();
+var createdEmployee = response[1].GetJson<EmployeeDto>();
+var createdDivision = response[2].GetJson<DivisionDto>();
+var createdProject = response[3].GetJson<ProjectDto>();
+var createdDepartment = response[4].GetJson<DepartmentDto>();
+
+createdCompany.Id.Should().BeGreaterThan(0);
+createdEmployee.Id.Should().BeGreaterThan(0);
+createdDivision.Id.Should().BeGreaterThan(0);
+createdProject.Id.Should().BeGreaterThan(0);
+createdDepartment.Id.Should().BeGreaterThan(0);
+
+createdEmployee.CompanyId.Should().Be(createdCompany.Id);
+
+createdDivision.CompanyId.Should().Be(createdCompany.Id);
+createdDivision.ManagerId.Should().Be(createdEmployee.Id);
+
+createdProject.DivisionId.Should().Be(createdDivision.Id);
+createdProject.ManagerId.Should().Be(createdEmployee.Id);
+
+createdDepartment.ProjectId.Should().Be(createdProject.Id);
+createdDepartment.ManagerId.Should().Be(createdEmployee.Id);
+
+tp.SetVariable("CreatedCompanyId", createdCompany.Id.ToString(), "hierarchy");
+tp.SetVariable("CreatedEmployeeId", createdEmployee.Id.ToString(), "hierarchy");
+tp.SetVariable("CreatedDivisionId", createdDivision.Id.ToString(), "hierarchy");
+tp.SetVariable("CreatedProjectId", createdProject.Id.ToString(), "hierarchy");
+tp.SetVariable("CreatedDepartmentId", createdDepartment.Id.ToString(), "hierarchy");
+
+---END

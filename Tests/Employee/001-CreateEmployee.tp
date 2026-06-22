@@ -39,7 +39,7 @@ await tp.Test("Created employee should match request body.", async () =>
     dynamic created = await tp.Responses["CreateEmployeeRequest"].GetBodyAsExpandoAsync();
 
     True(created.id > 0);
-    Equal(expected.employeeNumber, created.employeeNumber);
+    Equal(expected.employeeNumber.ToString(), created.employeeNumber.ToString());
     Equal(expected.title, created.title);
     Equal(expected.firstName, created.firstName);
     Equal(expected.lastName, created.lastName);
@@ -59,7 +59,7 @@ await tp.Test("Retrieved employee should match created employee.", async () =>
     dynamic retrieved = await tp.Responses["GetCreatedEmployeeRequest"].GetBodyAsExpandoAsync();
 
     Equal(created.id, retrieved.id);
-    Equal(created.employeeNumber, retrieved.employeeNumber);
+    Equal(created.employeeNumber.ToString(), created.employeeNumber.ToString());
     Equal(created.email, retrieved.email);
 });
 

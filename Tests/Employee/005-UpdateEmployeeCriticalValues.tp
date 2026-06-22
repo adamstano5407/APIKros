@@ -10,6 +10,39 @@ var employeeTwo = GenerateEmployee();
 var company = GenerateCompany();
 var anotherCompany = GenerateCompany();
 
+var createEmployeeBody = new
+{
+    title = employee.Title,
+    employeeNumber = employee.EmployeeNumber,
+    firstName = employee.FirstName,
+    lastName = employee.LastName,
+    email = employee.Email,
+    phone = employee.Phone
+};
+var createEmployeeTwoBody = new
+{
+    title = employeeTwo.Title,
+    employeeNumber = employeeTwo.EmployeeNumber,
+    firstName = employeeTwo.FirstName,
+    lastName = employeeTwo.LastName,
+    email = employeeTwo.Email,
+    phone = employeeTwo.Phone
+};
+tp.SetVariable("EmployeeNumber", employee.EmployeeNumber, "employees");
+tp.SetVariable("EmployeeTitle", employee.Title ?? "", "employees");
+tp.SetVariable("EmployeeFirstName", employee.FirstName, "employees");
+tp.SetVariable("EmployeeLastName", employee.LastName, "employees");
+tp.SetVariable("EmployeeEmail", employee.Email, "employees");
+tp.SetVariable("EmployeePhone", employee.Phone, "employees");
+
+tp.SetVariable("EmployeeTwoNumber", employeeTwo.EmployeeNumber, "employees");
+tp.SetVariable("EmployeeTwoTitle", employeeTwo.Title ?? "", "employees");
+tp.SetVariable("EmployeeTwoFirstName", employeeTwo.FirstName, "employees");
+tp.SetVariable("EmployeeTwoLastName", employeeTwo.LastName, "employees");
+tp.SetVariable("EmployeeTwoEmail", employeeTwo.Email, "employees");
+tp.SetVariable("EmployeeTwoPhone", employeeTwo.Phone, "employees");
+
+
 tp.SetVariable("Employee", employee.ToJsonString(), "employees");
 tp.SetVariable("EmployeeTwo", employeeTwo.ToJsonString(), "employees");
 tp.SetVariable("Company", company.ToJsonString(), "companies");
@@ -37,12 +70,12 @@ POST {{APP_URL}}{{EmployeesEndpoint}}
 Content-Type: application/json
 
 {
-  "employeeNumber": "{{Employee.employeeNumber}}",
-  "title": "{{Employee.title}}",
-  "firstName": "{{Employee.firstName}}",
-  "lastName": "{{Employee.lastName}}",
-  "email": "{{Employee.email}}",
-  "phone": "{{Employee.phone}}",
+  "title": "{{EmployeeTitle}}",
+  "employeeNumber": "{{EmployeeNumber}}",
+  "firstName": "{{EmployeeFirstName}}",
+  "lastName": "{{EmployeeLastName}}",
+  "email": "{{EmployeeEmail}}",
+  "phone": "{{EmployeePhone}}",
   "companyId": {{CreateCompanyRequest.response.body.$.id}}
 }
 
@@ -52,12 +85,12 @@ POST {{APP_URL}}{{EmployeesEndpoint}}
 Content-Type: application/json
 
 {
-  "employeeNumber": "{{EmployeeTwo.employeeNumber}}",
-  "title": "{{EmployeeTwo.title}}",
-  "firstName": "{{EmployeeTwo.firstName}}",
-  "lastName": "{{EmployeeTwo.lastName}}",
-  "email": "{{EmployeeTwo.email}}",
-  "phone": "{{EmployeeTwo.phone}}",
+  "title": "{{EmployeeTwoTitle}}",
+  "employeeNumber": "{{EmployeeTwoNumber}}",
+  "firstName": "{{EmployeeTwoFirstName}}",
+  "lastName": "{{EmployeeTwoLastName}}",
+  "email": "{{EmployeeTwoEmail}}",
+  "phone": "{{EmployeeTwoPhone}}",
   "companyId": {{CreateCompanyRequest.response.body.$.id}}
 }
 
@@ -104,6 +137,8 @@ GET {{APP_URL}}{{EmployeesEndpoint}}/{{CreateEmployeeRequest.response.body.$.id}
 
 --- TEST
 
+using Newtonsoft.Json.Linq;
+
 tp.Test("Company should be created.", () =>
 {
     Equal(201, tp.Responses["CreateCompanyRequest"].StatusCode());
@@ -149,20 +184,24 @@ await tp.Test("Employee should be moved to another company.", async () =>
 
 await tp.Test("Original company should contain only employee two.", async () =>
 {
-    dynamic employees = await tp.Responses["GetOriginalCompanyEmployeesRequest"].GetBodyAsExpandoAsync();
+    var body = await tp.Responses["GetOriginalCompanyEmployeesRequest"].GetBodyAsync();
+    var employees = JArray.Parse(body);
+
     dynamic employeeTwo = await tp.Responses["CreateEmployeeTwoRequest"].GetBodyAsExpandoAsync();
 
     Equal(1, employees.Count);
-    Equal(employeeTwo.id, employees[0].id);
+    Equal((int)employeeTwo.id, employees[0]["id"]!.Value<int>());
 });
 
 await tp.Test("Another company should contain moved employee.", async () =>
 {
-    dynamic employees = await tp.Responses["GetAnotherCompanyEmployeesRequest"].GetBodyAsExpandoAsync();
+    var body = await tp.Responses["GetAnotherCompanyEmployeesRequest"].GetBodyAsync();
+    var employees = JArray.Parse(body);
+
     dynamic movedEmployee = await tp.Responses["CreateEmployeeRequest"].GetBodyAsExpandoAsync();
 
     Equal(1, employees.Count);
-    Equal(movedEmployee.id, employees[0].id);
+    Equal((int)movedEmployee.id, employees[0]["id"]!.Value<int>());
 });
 
 

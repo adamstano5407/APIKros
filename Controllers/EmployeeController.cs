@@ -95,7 +95,7 @@ namespace APIKros.Controllers
             var employee = await _context.Employees.FindAsync(id);
 
             if (employee == null)
-                return NotFound();
+                return NotFound("Employee not found.");
 
             var targetCompanyId = request.CompanyId ?? employee.CompanyId;
 
