@@ -47,15 +47,13 @@ var app = builder.Build();
 
 // CORS can be configured later when a frontend application is added.
 
-if (args.Contains("--seed"))
+if (app.Environment.IsDevelopment())
 {
-    using var scope = app.Services.CreateScope();
-
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-    await DatabaseSeeder.SeedAsync(context);
-
-    return;
+    app.MapPost("/dev/seed", async (AppDbContext context) =>
+    {
+        await DatabaseSeeder.SeedAsync(context);
+        return Results.Ok("Database seeded.");
+    });
 }
 
 // Configure the HTTP request pipeline.

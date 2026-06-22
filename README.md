@@ -52,10 +52,16 @@ Create an environment file:
 cp .env-example .env
 ```
 
+Update an environment file:
+
+```bash
+nano .env
+```
+
 Build and start the containers:
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
 ## Database
@@ -68,12 +74,12 @@ docker exec -it api dotnet ef database update
 
 ---
 
-## Seed Data
+## Seed Data (only isDevelopment state)
 
 Generate sample data:
 
 ```bash
-docker exec -it api dotnet run -- --seed
+curl -X POST http://localhost:8080/dev/seed
 ```
 
 ---
