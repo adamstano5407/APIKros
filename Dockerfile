@@ -4,6 +4,10 @@ RUN apt-get update \
     && apt-get install -y gosu \
     && rm -rf /var/lib/apt/lists/*
 
+ARG UID=1000
+ARG GID=1000
+RUN usermod -u ${UID} ubuntu && groupmod -g ${GID} ubuntu
+
 WORKDIR /src
 
 RUN dotnet tool install --tool-path /usr/local/bin dotnet-ef
