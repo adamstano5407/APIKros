@@ -52,7 +52,7 @@ Create an environment file:
 cp .env-example .env
 ```
 
-Update an environment file:
+Update an environment file: (DB password must be at least 8 chars)
 
 ```bash
 nano .env
