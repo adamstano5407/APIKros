@@ -3,7 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    
+      args:
+        - UID=${LOCAL_UID}
+        - GID=${LOCAL_GID}
     container_name: api
     working_dir: /src
     volumes:

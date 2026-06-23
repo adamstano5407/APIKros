@@ -58,10 +58,17 @@ Update an environment file:
 nano .env
 ```
 
-Build and start the containers:
+## Build and start the containers:
 
 ```bash
-docker compose up --build -d
+make up
+```
+## Fix permissions
+
+If your IDE cannot access generated files, you can fix local permissions:
+
+```bash
+make fix-permissions
 ```
 
 ## Database
@@ -69,7 +76,7 @@ docker compose up --build -d
 Apply migrations:
 
 ```bash
-docker exec -it api dotnet ef database update
+make migrate
 ```
 
 ---
@@ -79,7 +86,7 @@ docker exec -it api dotnet ef database update
 Generate sample data:
 
 ```bash
-curl -X POST http://localhost:8080/dev/seed
+make seed
 ```
 
 ---
@@ -98,7 +105,7 @@ http://localhost:8080/scalar/v1
 Run all TeaPie tests:
 
 ```bash
-docker exec -it api teapie test Tests
+make test
 ```
 
 Run a specific collection:

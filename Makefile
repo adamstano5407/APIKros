@@ -1,0 +1,31 @@
+USER := $(shell whoami)
+
+up:
+	docker compose up --build -d
+
+down:
+	docker compose down -v
+
+fix-permissions:
+	sudo chown -R $(USER):$(USER) ./bin ./obj
+
+migrate:
+	docker exec -it api dotnet ef database update
+
+seed:
+	curl -X POST http://localhost:8080/dev/seed
+
+logs:
+	docker compose logs -f api
+
+restart:
+	docker compose restart api
+
+test:
+	docker exec -it api teapie test Tests
+
+test-collection:
+	docker exec -it api teapie test Tests/$(collection)
+
+test-single:
+	docker exec -it api teapie test $(file)
