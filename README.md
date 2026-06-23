@@ -126,9 +126,21 @@ docker exec -it api teapie test Tests/Employee/001-CreateEmployee.tp
 
 
 
-## Project structure
+## DB Model
 
-The hierarchy consists of:
+
+The database is configured using Entity Framework Core Code First.
+
+Main entities:
+
+- Company
+- Division
+- Project
+- Department
+- Employee
+
+The organizational hierarchy is:
+
 
 Company → Division → Project → Department
 
@@ -139,7 +151,9 @@ Each hierarchy node has:
 - optional manager
 
 Employees belong to a company and can be assigned as managers.
-```
+
+## Project structure
+```text
 APIKros
 │
 ├── Controllers
@@ -150,8 +164,7 @@ APIKros
 ├── Requests
 ├── Validators
 ├── Seeders
-├── Tests
-└── Docker
+└──  Tests
 ```
 
 ---
