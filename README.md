@@ -52,11 +52,12 @@ Create an environment file:
 cp .env-example .env
 ```
 
-Update an environment file: (DB password must be at least 8 chars)
+Update the environment file (the DB password must be at least 8 characters long and meet SQL Server's strong password requirements, otherwise the SQL Server container will not start):
 
 ```bash
 nano .env
 ```
+Keep `DB_USER=sa`. The application uses the default SQL Server administrator account, and no additional database user needs to be created.
 
 ## Build and start the containers:
 
