@@ -1,3 +1,5 @@
+using APIKros.DTOs.Employee;
+
 namespace APIKros.DTOs.Division
 {
     public class DivisionDto : HierarchyNodeDto,IDto<Models.Division, DivisionDto>
@@ -12,7 +14,8 @@ namespace APIKros.DTOs.Division
                 Name = division.Name,
                 Code = division.Code,
                 CompanyId = division.CompanyId,
-                ManagerId = division.ManagerId
+                ManagerId = division.ManagerId, 
+                Manager = division.Manager is null ? null : EmployeeDto.CreateInstance(division.Manager)
             };
         }
     }

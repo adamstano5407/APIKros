@@ -1,3 +1,5 @@
+using APIKros.DTOs.Employee;
+
 namespace APIKros.DTOs.Department
 {
     public class DepartmentDto : HierarchyNodeDto, IDto<Models.Department, DepartmentDto>
@@ -12,7 +14,10 @@ namespace APIKros.DTOs.Department
                 Name = department.Name,
                 Code = department.Code,
                 ProjectId = department.ProjectId,
-                ManagerId = department.ManagerId
+                ManagerId = department.ManagerId,
+                Manager = department.Manager is null
+                    ? null
+                    : EmployeeDto.CreateInstance(department.Manager),
             };
         }
     }

@@ -1,3 +1,5 @@
+using APIKros.DTOs.Employee;
+
 namespace APIKros.DTOs.Company
 {
     public class CompanyDto : HierarchyNodeDto, IDto<Models.Company, CompanyDto>
@@ -9,7 +11,11 @@ namespace APIKros.DTOs.Company
                 Id = company.Id,
                 Name = company.Name,
                 Code = company.Code,
-                ManagerId = company.ManagerId
+                ManagerId = company.ManagerId, 
+                Manager = company.Manager is null
+                    ? null
+                    : EmployeeDto.CreateInstance(company.Manager),
+                
             };
         }
     }

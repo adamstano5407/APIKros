@@ -1,3 +1,5 @@
+using APIKros.DTOs.Employee;
+
 namespace APIKros.DTOs;
 
 public abstract class HierarchyNodeDto
@@ -6,4 +8,6 @@ public abstract class HierarchyNodeDto
     public string Name { get; set; } = null!;
     public string Code { get; set; } = null!;
     public int? ManagerId { get; set; }
+    
+    public EmployeeDto? Manager { get; set; }
 }

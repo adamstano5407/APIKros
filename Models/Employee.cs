@@ -6,13 +6,13 @@ namespace APIKros.Models
 {
 
 
-    public class Employee
+    public class Employee : IModel
     {
         [Key]
         public int Id { get; set; }
 
         [Required] 
-        public string EmployeeNumber = null!;
+        public string EmployeeNumber { get; set; }= null!;
         
         public string? Title { get; set; } = null;
         [Required]

@@ -65,15 +65,15 @@ namespace APIKros.Controllers
         {
             var employee = new Employee
             {
-                Title = request.Title,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
                 Phone = request.Phone,
                 CompanyId = request.CompanyId, 
-                EmployeeNumber = request.EmployeeNumber
             };
-                
+
+            employee.EmployeeNumber = request.EmployeeNumber ?? employee.EmployeeNumber;
+            
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
             return CreatedAtAction(
@@ -215,7 +215,7 @@ namespace APIKros.Controllers
         
         
         
-        private async Task UnassignEmployeeFromLeadershipPositions(int employeeId)
+        public async Task UnassignEmployeeFromLeadershipPositions(int employeeId)
         {
             await _context.Companies
                 .Where(c => c.ManagerId == employeeId)
