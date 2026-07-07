@@ -1,9 +1,11 @@
 using APIKros.Data;
 using APIKros.Extensions;
+using APIKros.Handlers;
 using APIKros.Seeders;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Data.SqlClient;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,28 +31,14 @@ builder.Services.AddValidation();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var connectionString =
-    $"Server={Environment.GetEnvironmentVariable("DB_HOST")},{Environment.GetEnvironmentVariable("DB_PORT")};" +
-    $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
-    $"User Id={Environment.GetEnvironmentVariable("DB_USER")};" +
-    $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};" +
-    $"TrustServerCertificate={Environment.GetEnvironmentVariable("DB_TRUST_CERTIFICATE")};";
-
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(builder.Configuration.GetSqlServerConnectionString()));
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-// CORS can be configured later when a frontend application is added.
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapPost("/dev/seed", async (AppDbContext context) =>
-    {
-        await DatabaseSeeder.SeedAsync(context);
-        return Results.Ok("Database seeded.");
-    });
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -64,6 +52,7 @@ app.UseHttpsRedirection();
 //app.UseAuthorization();
 
 app.MapRoutes();
+app.UseExceptionHandler();
 
 app.Run();
 

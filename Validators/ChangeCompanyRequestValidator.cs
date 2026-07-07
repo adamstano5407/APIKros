@@ -1,9 +1,8 @@
 using APIKros.Data;
-using APIKros.Models;
 using APIKros.Requests.Employee;
 using FluentValidation;
 
-namespace APIKros.Validators.Employee;
+namespace APIKros.Validators;
 
 public class ChangeCompanyRequestValidator : AbstractValidator<ChangeCompanyRequest>
 {

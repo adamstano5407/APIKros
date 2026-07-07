@@ -1,9 +1,8 @@
 using APIKros.Data;
 using APIKros.Requests.Employee;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
-namespace APIKros.Validators.Employee;
+namespace APIKros.Validators;
 
 public class UpdateEmployeeRequestValidator : AbstractValidator<UpdateEmployeeRequest>
 {
