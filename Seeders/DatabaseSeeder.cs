@@ -1,4 +1,5 @@
 using APIKros.Data;
+using APIKros.Exceptions;
 using APIKros.Seeders.Fakers;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +10,7 @@ public static class DatabaseSeeder
     public static async Task SeedAsync(AppDbContext context)
     {
         if (await context.Companies.AnyAsync())
-            return;
+            throw new DatabaseNotEmpty();
 
         var companies = new CompanyFaker().Generate(3);
 

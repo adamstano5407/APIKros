@@ -18,16 +18,17 @@ public class GlobalExceptionHandler : IExceptionHandler
             case ValidationException validationException:
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-                await context.Response.WriteAsJsonAsync(new
-                {
-                    type = "validation_error",
-                    errors = validationException.Errors.Select(e => new
-                    {
-                        field = e.PropertyName,
-                        message = e.ErrorMessage,
-                        code = e.ErrorCode
-                    })
-                }, cancellationToken);
+               await context.Response.WriteAsJsonAsync(new
+               {
+                   error = context.Response.StatusCode,
+                   details = validationException.Errors.Select(e => new
+                   {
+                       field = e.PropertyName,
+                       message = e.ErrorMessage
+                   })
+               }, cancellationToken);
+               
+               return true;
 
                 return true;
 
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             case DataIntegrityException:
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 break;
-
+            
             case RuntimeException:
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 break;
@@ -61,10 +62,10 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         await context.Response.WriteAsJsonAsync(new
         {
-            type = exception.GetType().Name,
+            error = context.Response.StatusCode,
             message = exception.Message
         }, cancellationToken);
-
+        
         return true;
     }
 }
