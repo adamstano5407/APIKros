@@ -23,7 +23,7 @@ public static class DatabaseSeeder
             context.Employees.AddRange(employees);
             await context.SaveChangesAsync();
 
-            company.ManagerId = employees[0].Id;
+            company.AssignManager(employees[0].Id);
 
             var divisions = new DivisionFaker(company.Id, employees).Generate(3);
 

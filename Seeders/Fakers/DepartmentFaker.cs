@@ -8,9 +8,18 @@ public class DepartmentFaker : Faker<Department>
 {
     public DepartmentFaker(int projectId, List<Employee> employees) : base("sk")
     {
-        RuleFor(d => d.Name, f => f.Commerce.Department());
-        RuleFor(d => d.Code, f => f.Random.AlphaNumeric(5).ToUpper());
-        RuleFor(d => d.ProjectId, projectId);
-        RuleFor(d => d.ManagerId, f => f.PickRandom(employees).Id);
+        CustomInstantiator(f =>
+        {
+            var managerId = employees.Count > 0
+                ? f.PickRandom(employees).Id
+                : (int?)null;
+
+            return new Department(
+                name: f.Commerce.Department(),
+                code: f.Random.AlphaNumeric(5).ToUpperInvariant(),
+                projectId: projectId,
+                managerId: managerId
+            );
+        });
     }
 }
