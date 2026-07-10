@@ -15,19 +15,19 @@ public class Repository<T, TK> : IRepository<T, TK>
         DbContext = db;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await DbContext.Set<T>()
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken);  
     }
 
-    public async Task<T?> GetByIdAsync(TK id, CancellationToken cancellationToken = default)
+    public virtual async Task<T?> GetByIdAsync(TK id, CancellationToken cancellationToken = default)
     {
         return await DbContext.Set<T>()
             .FindAsync([id], cancellationToken);
     }
 
-    public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
+    public virtual async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
     {
         await DbContext.Set<T>()
             .AddAsync(entity, cancellationToken);
@@ -35,13 +35,13 @@ public class Repository<T, TK> : IRepository<T, TK>
         return entity;
     }
 
-    public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+    public  virtual Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
         DbContext.Set<T>().Update(entity);
         return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(TK id, CancellationToken cancellationToken = default)
+    public virtual async Task DeleteAsync(TK id, CancellationToken cancellationToken = default)
     {
         var entity = await DbContext.Set<T>()
             .FindAsync([id], cancellationToken);
@@ -52,13 +52,13 @@ public class Repository<T, TK> : IRepository<T, TK>
         DbContext.Set<T>().Remove(entity);
     }
 
-    public async Task<bool> ExistsAsync(TK id, CancellationToken cancellationToken = default)
+    public virtual async Task<bool> ExistsAsync(TK id, CancellationToken cancellationToken = default)
     {
         return await DbContext.Set<T>()
             .AnyAsync(e => e.Id.Equals(id), cancellationToken);
     }
 
-    public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return await DbContext.SaveChangesAsync(cancellationToken) > 0;
     }

@@ -11,9 +11,27 @@ public abstract class HierarchyNodeRepository<T, TK>
     where TK : IEquatable<TK>, IComparable<TK>
 {
     protected virtual string? ParentPropertyName => null;
+
     protected HierarchyNodeRepository(AppDbContext db)
         : base(db)
     {
+    }
+
+    public override async Task<IEnumerable<T>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Set<T>()
+            .Include(x => x.Manager)
+            .ToListAsync(cancellationToken);
+    }
+
+    public override async Task<T?> GetByIdAsync(
+        TK id,
+        CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Set<T>()
+            .Include(x => x.Manager)
+            .FirstOrDefaultAsync(x => x.Id!.Equals(id), cancellationToken);
     }
 
     public async Task<bool> CodeExistsAsync(
@@ -30,9 +48,10 @@ public abstract class HierarchyNodeRepository<T, TK>
 
     public virtual async Task UnassignManagerAsync(TK id)
     {
-        await DbContext.Set<T>().AsNoTracking().Where(x => x.Id.Equals(id)).ExecuteUpdateAsync(setters => setters.SetProperty(x => x.ManagerId, _ => null ));
+        await DbContext.Set<T>().AsNoTracking().Where(x => x.Id.Equals(id))
+            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.ManagerId, _ => null));
     }
-    
+
     public virtual async Task<Employee?> GetManagerOfNodeAsync(TK id)
     {
         return await DbContext.Set<T>().AsNoTracking().Where(x => x.Id.Equals(id)).Select(x => x.Manager)

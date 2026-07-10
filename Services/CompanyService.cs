@@ -48,7 +48,7 @@ public class CompanyService : ICompanyService
     public async Task<IEnumerable<CompanyDto>> GetAllAsync()
     {
         var companies = await _repo.GetAllAsync();
-
+        
         return _mapper.Map<IReadOnlyList<CompanyDto>>(companies);
     }
 

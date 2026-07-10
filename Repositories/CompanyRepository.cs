@@ -12,8 +12,6 @@ public class CompanyRepository : HierarchyNodeRepository<Company, int>, ICompany
     {
     }
     
-    
-
     public async Task<ICollection<Division>> GetAllChildNodesAsync(int id)
     {
         return await DbContext.Companies.Where(c => c.Id == id).SelectMany(c => c.Divisions).ToListAsync();
