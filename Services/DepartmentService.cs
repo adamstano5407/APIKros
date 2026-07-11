@@ -68,7 +68,8 @@ public class DepartmentService : IDepartmentService
        (
             request.Name,
             request.Code,
-            projectId: request.ParentId
+            projectId: request.ParentId, 
+            managerId: request.ManagerId
        );
 
         await _departmentRepo.CreateAsync(department);

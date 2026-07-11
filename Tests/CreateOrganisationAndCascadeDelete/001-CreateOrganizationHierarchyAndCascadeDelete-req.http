@@ -5,7 +5,14 @@ Content-Type: application/json
 
 {{Company}}
 
+### Assign Company Manager
+# @name AssignCompanyManagerRequest
+PUT {{APP_URL}}{{CompaniesEndpoint}}/{{CreateCompanyRequest.response.body.$.id}}/manager
+Content-Type: application/json
 
+{
+  "employeeId": {{CreateEmployeeRequest.response.body.$.id}}
+}
 
 ### Create Employee
 # @name CreateEmployeeRequest
@@ -21,6 +28,7 @@ Content-Type: application/json
   "phone": "{{EmployeePhone}}",
   "companyId": {{CreateCompanyRequest.response.body.$.id}}
 }
+
 
 ### Create Division
 # @name CreateDivisionRequest
@@ -100,4 +108,4 @@ GET {{APP_URL}}{{ProjectsEndpoint}}/{{CreateProjectRequest.response.body.$.id}}
 
 ### Get Deleted Department
 # @name GetDeletedDepartmentRequest
-GET {{APP_URL}}{{DepartmentsEndpoint}}/{{CreateProjectRequest.response.body.$.id}}
+GET {{APP_URL}}{{DepartmentsEndpoint}}/{{CreateDepartmentRequest.response.body.$.id}}

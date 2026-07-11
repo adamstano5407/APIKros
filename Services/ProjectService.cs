@@ -58,7 +58,7 @@ public class ProjectService : IProjectService
 
         var project = new Project(
             name: request.Name, code: request.Code,
-            divisionId: request.ParentId);
+            divisionId: request.ParentId, managerId: request.ManagerId);
 
         await _projectRepo.CreateAsync(project);
         await _projectRepo.SaveChangesAsync();

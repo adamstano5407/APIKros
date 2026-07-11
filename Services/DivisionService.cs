@@ -64,11 +64,12 @@ public class DivisionService : IDivisionService
         var division = new Division(
            request.Name,
            request.Code,
-           companyId : request.ParentId
+           companyId : request.ParentId,
+           managerId: request.ManagerId
         );
 
         await _divisionRepo.CreateAsync(division);
-
+        await _divisionRepo.SaveChangesAsync();
         return _mapper.Map<DivisionDto>(division);
     }
 

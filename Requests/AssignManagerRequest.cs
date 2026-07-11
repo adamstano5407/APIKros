@@ -6,6 +6,6 @@ public class AssignManagerRequest
 {
     [Required]
     public int EmployeeId { get; set; }
-    [Required]
-    public int NodeId { get; set; }
+
+    public int? NodeId { get; set; } = null;
 }

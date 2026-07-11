@@ -1,10 +1,10 @@
-#load "../.teapie/Definitions/Company/Company.csx"
-#load "../.teapie/Definitions/Division/Division.csx"
-#load "../.teapie/Definitions/Project/Project.csx"
-#load "../.teapie/Definitions/Department/Department.csx"
-#load "../.teapie/Definitions/Employee/Employee.csx"
-#load "../.teapie/Definitions/Generator.csx"
-#load "../.teapie/Definitions/SetObjectVariable.csx"
+#load "../../.teapie/Definitions/Company/Company.csx"
+#load "../../.teapie/Definitions/Division/Division.csx"
+#load "../../.teapie/Definitions/Project/Project.csx"
+#load "../../.teapie/Definitions/Department/Department.csx"
+#load "../../.teapie/Definitions/Employee/Employee.csx"
+#load "../../.teapie/Definitions/Generator.csx"
+#load "../../.teapie/Definitions/SetObjectVariable.csx"
 
 const string Tag = "hierarchy-001";
 
