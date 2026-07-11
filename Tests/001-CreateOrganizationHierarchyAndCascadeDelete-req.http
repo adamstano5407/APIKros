@@ -1,0 +1,103 @@
+### Create Company
+# @name CreateCompanyRequest
+POST {{APP_URL}}{{CompaniesEndpoint}}
+Content-Type: application/json
+
+{{Company}}
+
+
+
+### Create Employee
+# @name CreateEmployeeRequest
+POST {{APP_URL}}{{EmployeesEndpoint}}
+Content-Type: application/json
+
+{
+  "employeeNumber": "{{EmployeeEmployeeNumber}}",
+  "title": "{{EmployeeTitle}}",
+  "firstName": "{{EmployeeFirstName}}",
+  "lastName": "{{EmployeeLastName}}",
+  "email": "{{EmployeeEmail}}",
+  "phone": "{{EmployeePhone}}",
+  "companyId": {{CreateCompanyRequest.response.body.$.id}}
+}
+
+### Create Division
+# @name CreateDivisionRequest
+POST {{APP_URL}}{{DivisionsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{DivisionName}}",
+  "code": "{{DivisionCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateCompanyRequest.response.body.$.id}}
+}
+
+### Create Project
+# @name CreateProjectRequest
+POST {{APP_URL}}{{ProjectsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{ProjectName}}",
+  "code": "{{ProjectCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateDivisionRequest.response.body.$.id}}
+}
+
+### Create Department
+# @name CreateDepartmentRequest
+POST {{APP_URL}}{{DepartmentsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{DepartmentName}}",
+  "code": "{{DepartmentCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateProjectRequest.response.body.$.id}}
+}
+
+### Get Company
+# @name GetCompanyRequest
+GET {{APP_URL}}{{CompaniesEndpoint}}/{{CreateCompanyRequest.response.body.$.id}}
+
+### Get Employee
+# @name GetEmployeeRequest
+GET {{APP_URL}}{{EmployeesEndpoint}}/{{CreateEmployeeRequest.response.body.$.id}}
+
+### Get Division
+# @name GetDivisionRequest
+GET {{APP_URL}}{{DivisionsEndpoint}}/{{CreateDivisionRequest.response.body.$.id}}
+
+### Get Project
+# @name GetProjectRequest
+GET {{APP_URL}}{{ProjectsEndpoint}}/{{CreateProjectRequest.response.body.$.id}}
+
+### Get Department
+# @name GetDepartmentRequest
+GET {{APP_URL}}{{DepartmentsEndpoint}}/{{CreateDepartmentRequest.response.body.$.id}}
+
+### Delete Company
+# @name DeleteCompanyRequest
+DELETE {{APP_URL}}{{CompaniesEndpoint}}/{{CreateCompanyRequest.response.body.$.id}}
+
+### Get Deleted Company
+# @name GetDeletedCompanyRequest
+GET {{APP_URL}}{{CompaniesEndpoint}}/{{CreateCompanyRequest.response.body.$.id}}
+
+### Get Deleted Employee
+# @name GetDeletedEmployeeRequest
+GET {{APP_URL}}{{EmployeesEndpoint}}/{{CreateEmployeeRequest.response.body.$.id}}
+
+### Get Deleted Division
+# @name GetDeletedDivisionRequest
+GET {{APP_URL}}{{DivisionsEndpoint}}/{{CreateDivisionRequest.response.body.$.id}}
+
+### Get Deleted Project
+# @name GetDeletedProjectRequest
+GET {{APP_URL}}{{ProjectsEndpoint}}/{{CreateProjectRequest.response.body.$.id}}
+
+### Get Deleted Department
+# @name GetDeletedDepartmentRequest
+GET {{APP_URL}}{{DepartmentsEndpoint}}/{{CreateProjectRequest.response.body.$.id}}

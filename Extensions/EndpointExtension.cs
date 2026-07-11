@@ -14,11 +14,11 @@ public static class EndpointExtensions
         {
             api.RequireRateLimiting("default");
         }
-        app.MapCompanyEndpoints();
-        app.MapDivisionEndpoints();
-        app.MapProjectEndpoints();
-        app.MapDepartmentEndpoints();
-        app.MapEmployeeEndpoints();
+        api.MapCompanyEndpoints();
+        api.MapDivisionEndpoints();
+        api.MapProjectEndpoints();
+        api.MapDepartmentEndpoints();
+        api.MapEmployeeEndpoints();
         if (app.ServiceProvider.GetRequiredService<IHostEnvironment>().IsDevelopment())
         {
             app.MapPost("/dev/seed", async (AppDbContext context) =>
