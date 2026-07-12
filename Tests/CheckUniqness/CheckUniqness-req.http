@@ -1,0 +1,227 @@
+### Create Company
+# @name CreateCompanyRequest
+POST {{APP_URL}}{{CompaniesEndpoint}}
+Content-Type: application/json
+
+{{Company}}
+
+
+### Create Company Clone
+# @name CreateCompanyCloneRequest
+POST {{APP_URL}}{{CompaniesEndpoint}}
+Content-Type: application/json
+
+{{CompanyClone}}
+
+
+### Create Company Code Clone
+# @name CreateCompanyCodeCloneRequest
+POST {{APP_URL}}{{CompaniesEndpoint}}
+Content-Type: application/json
+
+{{CompanyCodeClone}}
+
+
+### Create Employee
+# @name CreateEmployeeRequest
+POST {{APP_URL}}{{EmployeesEndpoint}}
+Content-Type: application/json
+
+{
+  "employeeNumber": "{{EmployeeEmployeeNumber}}",
+  "title": "{{EmployeeTitle}}",
+  "firstName": "{{EmployeeFirstName}}",
+  "lastName": "{{EmployeeLastName}}",
+  "email": "{{EmployeeEmail}}",
+  "phone": "{{EmployeePhone}}",
+  "companyId": {{CreateCompanyRequest.response.body.$.id}}
+}
+
+
+### Create Employee Clone
+# @name CreateEmployeeCloneRequest
+POST {{APP_URL}}{{EmployeesEndpoint}}
+Content-Type: application/json
+
+{
+  "employeeNumber": "{{EmployeeCloneEmployeeNumber}}",
+  "title": "{{EmployeeCloneTitle}}",
+  "firstName": "{{EmployeeCloneFirstName}}",
+  "lastName": "{{EmployeeCloneLastName}}",
+  "email": "{{EmployeeCloneEmail}}",
+  "phone": "{{EmployeeClonePhone}}",
+  "companyId": {{CreateCompanyRequest.response.body.$.id}}
+}
+
+
+### Create Employee Email Clone
+# @name CreateEmployeeEmailCloneRequest
+POST {{APP_URL}}{{EmployeesEndpoint}}
+Content-Type: application/json
+
+{
+  "employeeNumber": "{{EmployeeEmailCloneEmployeeNumber}}",
+  "title": "{{EmployeeEmailCloneTitle}}",
+  "firstName": "{{EmployeeEmailCloneFirstName}}",
+  "lastName": "{{EmployeeEmailCloneLastName}}",
+  "email": "{{EmployeeEmailCloneEmail}}",
+  "phone": "{{EmployeeEmailClonePhone}}",
+  "companyId": {{CreateCompanyRequest.response.body.$.id}}
+}
+
+
+### Create Employee Number Clone
+# @name CreateEmployeeNumberCloneRequest
+POST {{APP_URL}}{{EmployeesEndpoint}}
+Content-Type: application/json
+
+{
+  "employeeNumber": "{{EmployeeNumberCloneEmployeeNumber}}",
+  "title": "{{EmployeeNumberCloneTitle}}",
+  "firstName": "{{EmployeeNumberCloneFirstName}}",
+  "lastName": "{{EmployeeNumberCloneLastName}}",
+  "email": "{{EmployeeNumberCloneEmail}}",
+  "phone": "{{EmployeeNumberClonePhone}}",
+  "companyId": {{CreateCompanyRequest.response.body.$.id}}
+}
+
+
+### Create Division
+# @name CreateDivisionRequest
+POST {{APP_URL}}{{DivisionsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{DivisionName}}",
+  "code": "{{DivisionCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateCompanyRequest.response.body.$.id}}
+}
+
+
+### Create Division Clone
+# @name CreateDivisionCloneRequest
+POST {{APP_URL}}{{DivisionsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{DivisionCloneName}}",
+  "code": "{{DivisionCloneCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateCompanyRequest.response.body.$.id}}
+}
+
+
+### Create Division Code Clone
+# @name CreateDivisionCodeCloneRequest
+POST {{APP_URL}}{{DivisionsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{DivisionCodeCloneName}}",
+  "code": "{{DivisionCodeCloneCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateCompanyRequest.response.body.$.id}}
+}
+
+
+### Create Project
+# @name CreateProjectRequest
+POST {{APP_URL}}{{ProjectsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{ProjectName}}",
+  "code": "{{ProjectCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateDivisionRequest.response.body.$.id}}
+}
+
+
+### Create Project Clone
+# @name CreateProjectCloneRequest
+POST {{APP_URL}}{{ProjectsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{ProjectCloneName}}",
+  "code": "{{ProjectCloneCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateDivisionRequest.response.body.$.id}}
+}
+
+
+### Create Project Code Clone
+# @name CreateProjectCodeCloneRequest
+POST {{APP_URL}}{{ProjectsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{ProjectCodeCloneName}}",
+  "code": "{{ProjectCodeCloneCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateDivisionRequest.response.body.$.id}}
+}
+
+
+### Create Department
+# @name CreateDepartmentRequest
+POST {{APP_URL}}{{DepartmentsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{DepartmentName}}",
+  "code": "{{DepartmentCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateProjectRequest.response.body.$.id}}
+}
+
+
+### Create Department Clone
+# @name CreateDepartmentCloneRequest
+POST {{APP_URL}}{{DepartmentsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{DepartmentCloneName}}",
+  "code": "{{DepartmentCloneCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateProjectRequest.response.body.$.id}}
+}
+
+
+### Create Department Code Clone
+# @name CreateDepartmentCodeCloneRequest
+POST {{APP_URL}}{{DepartmentsEndpoint}}
+Content-Type: application/json
+
+{
+  "name": "{{DepartmentCodeCloneName}}",
+  "code": "{{DepartmentCodeCloneCode}}",
+  "managerId": {{CreateEmployeeRequest.response.body.$.id}},
+  "parentId": {{CreateProjectRequest.response.body.$.id}}
+}
+
+
+### Delete Department
+# @name DeleteDepartmentRequest
+DELETE {{APP_URL}}{{DepartmentsEndpoint}}/{{CreateDepartmentRequest.response.body.$.id}}
+
+
+### Delete Project
+# @name DeleteProjectRequest
+DELETE {{APP_URL}}{{ProjectsEndpoint}}/{{CreateProjectRequest.response.body.$.id}}
+
+
+### Delete Division
+# @name DeleteDivisionRequest
+DELETE {{APP_URL}}{{DivisionsEndpoint}}/{{CreateDivisionRequest.response.body.$.id}}
+
+
+### Delete Employee
+# @name DeleteEmployeeRequest
+DELETE {{APP_URL}}{{EmployeesEndpoint}}/{{CreateEmployeeRequest.response.body.$.id}}
+
+### Delete Company
+# @name DeleteCompanyRequest
+DELETE {{APP_URL}}{{CompaniesEndpoint}}/{{CreateCompanyRequest.response.body.$.id}}
